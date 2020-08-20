@@ -12,18 +12,19 @@ app.get("/listings", (req, res) => {
   return res.send(listings);
 });
 
+// TODO rewrite to DELETE with :params ID ?
 app.post('/delete-listing', (req, res, next) => {
   const id: string = req.body.id;
   console.log(id, listings)
 
   for (let i = 0; i < listings.length; i++) {
-    if(listings[i].id === id) {
+    if (listings[i].id === id) {
       const removedItem = listings.splice(i, 1);
       return res.send(removedItem)
     }
   }
 
-  return res.send('Failed to remove item');
+  return res.send(`Failed to remove item: id:${id}`);
 });
 
 app.listen(PORT);
