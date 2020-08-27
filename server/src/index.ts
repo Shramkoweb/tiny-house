@@ -7,8 +7,6 @@ import {
 } from "./graphql";
 import { connectDatabase } from "./database";
 
-const app = express();
-
 const mount = async (app: Application) => {
   const db = await connectDatabase();
   const server = new ApolloServer({
@@ -23,4 +21,4 @@ const mount = async (app: Application) => {
   });
 };
 
-mount(app);
+mount(express());
