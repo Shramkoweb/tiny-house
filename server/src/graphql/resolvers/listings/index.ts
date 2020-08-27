@@ -1,11 +1,13 @@
 import { IResolvers } from "apollo-server-express";
 import { ObjectId } from "mongodb";
+
 import {
   Database,
   Listing
-} from "../lib/types";
+} from "../../../lib/types";
 
-export const resolvers: IResolvers = {
+// TODO move Query & Mutation to own resolver module ?
+export const listingsResolvers: IResolvers = {
     Query: {
       listings: async (
         _root: undefined,
