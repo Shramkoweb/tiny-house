@@ -7,7 +7,6 @@ export const server = {
   fetch: async <TResponseData = any, TRequestVariables = any>(
     body: Body<TRequestVariables>
   ) => {
-    console.log(JSON.stringify(body));
     const res = await fetch("/api", {
       method: "POST",
       headers: {

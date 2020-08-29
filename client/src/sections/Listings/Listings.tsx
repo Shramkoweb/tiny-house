@@ -37,23 +37,27 @@ interface Props {
   title: string;
 }
 
-const deleteListing = async (id: string) => {
+type TRefetch = () => Promise<void>;
+
+const deleteListing = async (id: string, refetch: TRefetch) => {
   await server.fetch<DeleteListingData, DeleteListingVariables>({
     query: DELETE_LISTING,
     variables: {
       id
     }
   });
+
+  refetch();
 };
 
-const renderListingsList = (listings: Listing[]) => {
+const renderListingsList = (listings: Listing[], refetch: TRefetch) => {
   return (
     <ul>
       {
         listings.map(({id, title}) => {
           return (
             <li key={id}>
-              <button onClick={() => deleteListing(id)}>Delete this listing</button>
+              <button onClick={() => deleteListing(id, refetch)}>Delete this listing</button>
               {title}
             </li>
           );
@@ -64,12 +68,12 @@ const renderListingsList = (listings: Listing[]) => {
 };
 
 export const Listings: FC<Props> = ({title}) => {
-  const {data} = useQuery<ListingData>(LISTINGS);
+  const {data, fetchApi} = useQuery<ListingData>(LISTINGS);
 
   return (
     <div>
       <h2>{title}</h2>
-      {data && renderListingsList(data.listings)}
+      {data && renderListingsList(data.listings, fetchApi)}
     </div>
   );
 
