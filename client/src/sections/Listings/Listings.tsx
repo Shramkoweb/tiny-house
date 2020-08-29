@@ -6,6 +6,7 @@ import {
 import {
   DeleteListingData,
   DeleteListingVariables,
+  Listing,
   ListingData
 } from "./types";
 
@@ -36,33 +37,39 @@ interface Props {
   title: string;
 }
 
+const deleteListing = async (id: string) => {
+  await server.fetch<DeleteListingData, DeleteListingVariables>({
+    query: DELETE_LISTING,
+    variables: {
+      id
+    }
+  });
+};
+
+const renderListingsList = (listings: Listing[]) => {
+  return (
+    <ul>
+      {
+        listings.map(({id, title}) => {
+          return (
+            <li key={id}>
+              <button onClick={() => deleteListing(id)}>Delete this listing</button>
+              {title}
+            </li>
+          );
+        })
+      }
+    </ul>
+  );
+};
+
 export const Listings: FC<Props> = ({title}) => {
   const {data} = useQuery<ListingData>(LISTINGS);
-
-  const deleteListing = async (id: string) => {
-    await server.fetch<DeleteListingData, DeleteListingVariables>({
-      query: DELETE_LISTING,
-      variables: {
-        id
-      }
-    });
-  };
-
-  const listingItems = data?.listings.map(({id, title}) => {
-    return <li key={id}>
-      <button onClick={() => deleteListing(id)}>Delete this listing</button>
-      {title}
-    </li>;
-  });
-
-  console.log(listingItems);
 
   return (
     <div>
       <h2>{title}</h2>
-      <ul>
-        {listingItems}
-      </ul>
+      {data && renderListingsList(data.listings)}
     </div>
   );
 
