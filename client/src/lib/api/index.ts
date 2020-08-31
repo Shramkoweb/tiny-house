@@ -1,2 +1,2 @@
 export * from "./server";
-export * from "./userQuery"
+export * from "./useQuery"
