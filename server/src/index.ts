@@ -7,6 +7,7 @@ import {
 } from "./graphql";
 import { connectDatabase } from "./database";
 
+// TODO add try/catch for handling db/server errors
 const mount = async (app: Application) => {
   const db = await connectDatabase();
   const server = new ApolloServer({

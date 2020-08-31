@@ -68,10 +68,14 @@ const renderListingsList = (listings: Listing[], refetch: TRefetch) => {
 };
 
 export const Listings: FC<Props> = ({title}) => {
-  const {data, loading, fetchApi} = useQuery<ListingData>(LISTINGS);
+  const {data, loading, error, fetchApi} = useQuery<ListingData>(LISTINGS);
 
   if (loading) {
     return <p>Loading ...</p>;
+  }
+
+  if (error) {
+    return <p>Uh oh! Something went wrong!</p>
   }
 
   return (
