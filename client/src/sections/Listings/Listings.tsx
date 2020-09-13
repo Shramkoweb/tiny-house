@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import {
-  server,
+  useMutation,
   useQuery
 } from "../../lib/api";
 import {
