@@ -6,8 +6,7 @@ import {
 import {
   DeleteListingData,
   DeleteListingVariables,
-  Listing,
-  ListingData
+  ListingsData
 } from "./types";
 
 const LISTINGS = `
@@ -39,49 +38,68 @@ interface Props {
 
 type TRefetch = () => Promise<void>;
 
-const deleteListing = async (id: string, refetch: TRefetch) => {
-  await server.fetch<DeleteListingData, DeleteListingVariables>({
-    query: DELETE_LISTING,
-    variables: {
-      id
-    }
-  });
-
-  refetch();
-};
-
-const renderListingsList = (listings: Listing[], refetch: TRefetch) => {
-  return (
-    <ul>
-      {
-        listings.map(({id, title}) => {
-          return (
-            <li key={id}>
-              <button onClick={() => deleteListing(id, refetch)}>Delete this listing</button>
-              {title}
-            </li>
-          );
-        })
-      }
-    </ul>
-  );
-};
-
 export const Listings: FC<Props> = ({title}) => {
-  const {data, loading, error, fetchApi} = useQuery<ListingData>(LISTINGS);
+  const {data, loading, error, refetch} = useQuery<ListingsData>(LISTINGS);
+  const [
+    deleteListing,
+    {
+      loading: deleteListingLoading,
+      error: deleteListingError,
+    },
+  ] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTING);
+
+  const handleDeleteListing = async (id: string) => {
+     await deleteListing({ id });
+    refetch();
+  };
+
+  const listings = data?.listings;
+  const listingsList = listings ? (
+    <ul>
+      {listings.map(listing => {
+        return (
+          <li key={listing.id}>
+            {listing.title}{" "}
+            <button onClick={() => handleDeleteListing(listing.id)}>
+              Delete
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  ) : null;
+
+  // const renderListingsList = (listings: Listing[], refetch: TRefetch) => {
+  //   return (
+  //     <ul>
+  //       {
+  //         listings.map(({id, title}) => {
+  //           return (
+  //             <li key={id}>
+  //               <button onClick={() => handleDeleteListing(id, refetch)}>Delete this listing</button>
+  //               {title}
+  //             </li>
+  //           );
+  //         })
+  //       }
+  //     </ul>
+  //   );
+  // };
 
   if (loading) {
     return <p>Loading ...</p>;
   }
 
   if (error) {
-    return <p>Uh oh! Something went wrong!</p>
+    return <p>Uh oh! Something went wrong - please try again later :(</p>;
   }
 
   return (
     <div>
       <h2>{title}</h2>
-      {data && renderListingsList(data.listings, fetchApi)}
+      {listingsList}
+
+      {/*{data && renderListingsList(data.listings, fetchApi)}*/}
     </div>
   );
 
