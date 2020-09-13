@@ -47,5 +47,5 @@ export const useQuery = <TData = any>(query: string) => {
     fetchApi();
   }, [fetchApi]);
 
-  return {...state, fetchApi};
+  return {...state, refetch: fetchApi};
 };
