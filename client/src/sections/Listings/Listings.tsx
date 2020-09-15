@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+
 import {
   useMutation,
   useQuery
@@ -36,8 +37,6 @@ interface Props {
   title: string;
 }
 
-type TRefetch = () => Promise<void>;
-
 export const Listings: FC<Props> = ({title}) => {
   const {data, loading, error, refetch} = useQuery<ListingsData>(LISTINGS);
   const [
@@ -49,11 +48,12 @@ export const Listings: FC<Props> = ({title}) => {
   ] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTING);
 
   const handleDeleteListing = async (id: string) => {
-     await deleteListing({ id });
+    await deleteListing({id});
     refetch();
   };
 
   const listings = data?.listings;
+
   const listingsList = listings ? (
     <ul>
       {listings.map(listing => {
@@ -69,23 +69,6 @@ export const Listings: FC<Props> = ({title}) => {
     </ul>
   ) : null;
 
-  // const renderListingsList = (listings: Listing[], refetch: TRefetch) => {
-  //   return (
-  //     <ul>
-  //       {
-  //         listings.map(({id, title}) => {
-  //           return (
-  //             <li key={id}>
-  //               <button onClick={() => handleDeleteListing(id, refetch)}>Delete this listing</button>
-  //               {title}
-  //             </li>
-  //           );
-  //         })
-  //       }
-  //     </ul>
-  //   );
-  // };
-
   if (loading) {
     return <p>Loading ...</p>;
   }
@@ -98,8 +81,6 @@ export const Listings: FC<Props> = ({title}) => {
     <div>
       <h2>{title}</h2>
       {listingsList}
-
-      {/*{data && renderListingsList(data.listings, fetchApi)}*/}
     </div>
   );
 
