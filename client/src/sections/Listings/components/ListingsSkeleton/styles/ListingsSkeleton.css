@@ -1,0 +1,11 @@
+.listings-skeleton .ant-skeleton-paragraph {
+    margin-top: 12px !important;
+}
+
+.listings-skeleton .ant-divider-horizontal {
+    margin: 12px 0;
+}
+
+.listings-skeleton .listings-skeleton__alert {
+    margin-bottom: 20px;
+}

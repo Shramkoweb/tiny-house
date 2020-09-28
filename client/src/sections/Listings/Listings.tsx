@@ -3,12 +3,24 @@ import {
   useMutation,
   useQuery
 } from "react-apollo";
+import {
+  Alert,
+  Avatar,
+  Button,
+  List,
+  Spin
+} from "antd";
 import { gql } from "apollo-boost";
+
 import { Listings as ListingsData } from "./__generated__/Listings";
 import {
   DeleteListing as DeleteListingData,
   DeleteListingVariables
 } from "./__generated__/DeleteListing";
+import { ListingsSkeleton } from "./components/ListingsSkeleton";
+
+// TODO rewrite to SASS
+import "./styles/Listings.css";
 
 const LISTINGS = gql`
   query Listings {
@@ -40,7 +52,6 @@ interface Props {
 
 export const Listings: FC<Props> = ({title}) => {
   const {data, loading, error, refetch} = useQuery<ListingsData>(LISTINGS);
-  console.log(data);
   const [
     deleteListing,
     {
@@ -57,33 +68,71 @@ export const Listings: FC<Props> = ({title}) => {
   const listings = data?.listings;
 
   const listingsList = listings ? (
-    <ul>
-      {listings.map(listing => {
+    <List
+      dataSource={listings}
+      renderItem={listing => {
+        const {id, title, image, address} = listing;
+
         return (
-          <li key={listing.id}>
-            {listing.title}{" "}
-            <button onClick={() => handleDeleteListing(listing.id)}>
-              Delete
-            </button>
-          </li>
+          <List.Item
+            actions={[
+              <Button
+                type="primary"
+                data-id={id}
+                onClick={() => handleDeleteListing(id)}
+              >
+                Delete
+              </Button>
+            ]}
+          >
+            <List.Item.Meta
+              title={title}
+              description={address}
+              avatar={
+                <Avatar
+                  src={image}
+                  shape="square"
+                  size={48}
+                />
+              }
+            />
+          </List.Item>
         );
-      })}
-    </ul>
+      }}
+    />
   ) : null;
 
   if (loading) {
-    return <p>Loading ...</p>;
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title}/>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>Uh oh! Something went wrong - please try again later :(</p>;
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title} error={error}/>
+      </div>
+    );
   }
 
+  const deleteListingErrorAlert = deleteListingError ? (
+    <Alert
+      type="error"
+      message="Uh oh! Something went wrong :(. Please try again later."
+      className="listings__alert"
+    />
+  ) : null;
+
   return (
-    <div>
-      <h2>{title}</h2>
-      {listingsList}
+    <div className="listings">
+      {deleteListingErrorAlert}
+      <Spin spinning={deleteListingLoading}>
+        <h2>{title}</h2>
+        {listingsList}
+      </Spin>
     </div>
   );
-
 };
