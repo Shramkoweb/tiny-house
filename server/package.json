@@ -1,0 +1,32 @@
+{
+  "name": "tiny-house",
+  "version": "1.0.0",
+  "description": "express server for tiny-house App",
+  "main": "index.js",
+  "keywords": [
+    "express",
+    "js",
+    "typescript",
+    "ts",
+    "node",
+    "server",
+    "socket",
+    "graphql"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shramkoweb/tiny-house.git"
+  },
+  "author": "Serhii Shramko <shramko.dev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shramkoweb/tiny-house/issues"
+  },
+  "homepage": "https://github.com/Shramkoweb/tiny-house#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
